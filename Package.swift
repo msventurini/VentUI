@@ -14,7 +14,7 @@ let package = Package(
         .library(
             name: "VentUI",
             targets: ["VentUI"]),
-        .library(name: "VentUICollectionCell", targets: ["VentUICollectionCell"])
+        .library(name: "CardCellKit", targets: ["CardCellKit"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,9 +25,7 @@ let package = Package(
             name: "VentUITests",
             dependencies: ["VentUI"]
         ),
-        
-        .target(
-            name: "VentUICollectionCell"),
+        .target(name: "CardCellKit")
         
     ]
 )
