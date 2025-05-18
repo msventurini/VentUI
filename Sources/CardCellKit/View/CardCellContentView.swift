@@ -31,11 +31,22 @@ class CardCellContentView: UIView, UIContentView {
         return cropMask
     }()
 
-    private let labelBackgroundView: UIView = {
+//    private let labelBackgroundView: UIView = {
+//
+//        let backgroundView = UIView()
+//
+//        backgroundView.backgroundColor = .gray
+//
+//        return backgroundView
+//    }()
+    
+    private let labelBackgroundView: UIVisualEffectView = {
 
-        let backgroundView = UIView()
+        let visualEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        
+        let backgroundView = UIVisualEffectView(effect: visualEffect)
 
-        backgroundView.backgroundColor = .gray
+
 
         return backgroundView
     }()
@@ -52,8 +63,16 @@ class CardCellContentView: UIView, UIContentView {
         guard appliedConfiguration != configuration else { return }
         appliedConfiguration = configuration
         labelView.text = configuration.titleText
-        imageView.isHidden = (configuration.image == nil) ? true : false
-        imageView.image = configuration.image
+        
+        guard let newImage = configuration.image else {
+            imageView.backgroundColor = .quaternarySystemFill
+            return
+        }
+        
+        imageView.backgroundColor = .clear
+        
+        imageView.image = newImage
+        
         imageView.contentMode = .scaleAspectFill
 
     }
@@ -96,4 +115,8 @@ extension CardCellContentView {
             labelView.topAnchor.constraint(greaterThanOrEqualTo: labelBackgroundView.topAnchor),
         ])
     }
+}
+
+#Preview {
+    DebugView()
 }
