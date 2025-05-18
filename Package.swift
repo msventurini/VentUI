@@ -12,8 +12,6 @@ let package = Package(
     ],
     
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        
         .library(
             name: "VentUI",
             targets: ["VentUI"]),
@@ -35,41 +33,3 @@ let package = Package(
     ]
 )
 
-enum VentUITarget: String, Identifiable, CaseIterable, Hashable {
-
-    var id: String {
-        return self.rawValue
-    }
-    
-    case VentUI = "VentUI"
-    case VentUITests = "VentUITests"
-    case VentUIDebugKit = "VentUIDebugKit"
-    case CardCellKit = "CardCellKit"
-    
-    var target: Target {
-        
-        switch self {
-        case .VentUI:
-                .target(name: "VentUI")
-        case .VentUITests:
-                .testTarget(name: "VentUITests",dependencies: ["VentUI"])
-        case .VentUIDebugKit:
-                .target(name: "VentUIDebugKit")
-        case .CardCellKit:
-                .target(
-                    name: "CardCellKit",
-                    dependencies:
-                        [
-                            .target(name: "VentUIDebugKit")
-                        ]
-                )
-        }
-        
-        
-    }
-    
-    static func getAllTargets() -> [Target] {
-        return VentUITarget.allCases.compactMap( { $0.target } )
-    }
-    
-}
