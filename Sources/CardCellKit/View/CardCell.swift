@@ -16,7 +16,7 @@ class CardCell: UICollectionViewCell {
         }
     }
     
-    var titleText: String? {
+    var title: String? {
         didSet {
             setNeedsUpdateConfiguration()
         }
@@ -24,14 +24,14 @@ class CardCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         self.image = nil
-        self.titleText = nil
+        self.title = nil
         super.init(frame: .zero)
         self.layer.masksToBounds = true
     }
     
     init(image: UIImage? = nil, titleText: String? = nil) {
         self.image = image
-        self.titleText = titleText
+        self.title = titleText
         super.init(frame: .zero)
         self.layer.masksToBounds = true
     }
@@ -46,7 +46,7 @@ class CardCell: UICollectionViewCell {
         var content = CardCellContentConfiguration().updated(for: state)
         
         content.image = image
-        content.titleText = titleText
+        content.title = title
         contentConfiguration = content
     }
 }

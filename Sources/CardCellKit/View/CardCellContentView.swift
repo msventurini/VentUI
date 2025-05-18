@@ -62,7 +62,7 @@ class CardCellContentView: UIView, UIContentView {
     private func apply(configuration: CardCellContentConfiguration) {
         guard appliedConfiguration != configuration else { return }
         appliedConfiguration = configuration
-        labelView.text = configuration.titleText
+        labelView.text = configuration.title
         
         guard let newImage = configuration.image else {
             imageView.backgroundColor = .quaternarySystemFill

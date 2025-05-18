@@ -11,7 +11,7 @@ import UIKit
 
 struct CardCellContentConfiguration: UIContentConfiguration, Hashable {
     var image: UIImage? = nil
-    var titleText: String? = nil
+    var title: String? = nil
     var tintColor: UIColor? = nil
 
     func makeContentView() -> UIView & UIContentView {
