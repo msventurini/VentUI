@@ -11,15 +11,17 @@ import UIKit
 import Observation
 import SwiftData
 
-public protocol ContentViewUpdatable: UIViewRepresentable {
+public protocol CollectionViewCellRepresentable: UIViewRepresentable {
     
     associatedtype ObservableModel: Observation.Observable
 
     var observableModel: ObservableModel? { get set }
     
     var onStart: (() -> UIViewType) { get }
-    var onUpdate: (_ observableModel: ObservableModel, _ uiView: UIViewType) -> Void { get }
+    var onUpdate: ((_ observableModel: ObservableModel, _ uiView: UIViewType) -> Void)? { get }
 
+    init(onStart: @escaping () -> UIViewType)
+    
     init(
         observableModel: Binding<ObservableModel?>,
         onStart: @escaping () -> UIViewType,
@@ -27,9 +29,11 @@ public protocol ContentViewUpdatable: UIViewRepresentable {
             _ observableModel: ObservableModel,
             _ uiView: UIViewType) -> Void)
     
+    
+    
 }
 
-public extension ContentViewUpdatable {
+public extension CollectionViewCellRepresentable {
     
     
     func makeUIView(context: Context) -> UIViewType {
@@ -37,10 +41,13 @@ public extension ContentViewUpdatable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        guard let observableModel else { return }
+        guard
+            let observableModel,
+            let onUpdate
+        else {
+            return
+        }
         onUpdate(observableModel, uiView)
-        
-        
     }
     
     

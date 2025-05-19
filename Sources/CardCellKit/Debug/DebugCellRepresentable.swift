@@ -17,20 +17,28 @@ struct DebugView: View {
     @State var debugModel: DebugModel? = nil
     
     var body: some View {
-        HStack {
-
+        
+        
+            VStack {
+                DebugCellRepresentable {
+                    CardCell()
+                }
+                
                 DebugCellRepresentable(observableModel: $debugModel) {
                     
                     CardCell()
                     
-                } onUpdate: { debugData, uiView in
-
+                }
+                onUpdate: { debugData, uiView in
+                    
                     uiView.image = debugData.image
                     uiView.title = debugData.title
                     uiView.isFavorite = debugData.isFavorite
                     
                 }
             }
+        
+        
         
     }
     
@@ -59,17 +67,23 @@ struct TesteEscaping<Content: View>: View {
 
 
 
-internal struct DebugCellRepresentable: ContentViewUpdatable {
-
+internal struct DebugCellRepresentable: CollectionViewCellRepresentable {
+    
     @Binding var observableModel: DebugModel?
     
     var onStart: (() -> CardCell)
-    var onUpdate: ((_ observableModel: DebugModel, _ uiView: CardCell) -> Void)
-
+    var onUpdate: ((_ observableModel: DebugModel, _ uiView: CardCell) -> Void)?
+    
+    init(onStart: @escaping () -> CardCell) {
+        self.onStart = onStart
+        self.onUpdate = nil
+        self._observableModel = .constant(nil)
+    }
+    
     init(
         observableModel: Binding<DebugModel?>,
         onStart: @escaping () -> CardCell,
-        onUpdate: @escaping (_ model: DebugModel, _ uiView: CardCell) -> Void
+        onUpdate: @escaping ((_ model: DebugModel, _ uiView: CardCell) -> Void)
     ) {
         self.onStart = onStart
         self.onUpdate = onUpdate
@@ -95,9 +109,10 @@ internal struct DebugCellRepresentable: ContentViewUpdatable {
     @Previewable @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
     
     @Previewable @Environment(\.modelContext) var modelContext
-    
-    ForEach(debugModels) { model in
-        DebugView(debugModel: model)
+    ScrollView {
+        ForEach(debugModels) { model in
+            DebugView(debugModel: model)
+        }
     }
     
 }
