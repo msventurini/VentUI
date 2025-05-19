@@ -24,7 +24,22 @@ struct DebugView: View {
         HStack {
 
             TesteEscaping($debugModel) { $debugData in
-                DebugCellRepresentable(debugData: $debugData)
+                
+                DebugCellRepresentable(debugData: $debugData) {
+                    CardCell()
+                } onUpdate: { debugData, uiView in
+                    
+                    guard let debugData else {
+                        uiView.image = nil
+                        uiView.title = nil
+                        uiView.isFavorite = nil
+                        return
+                    }
+                    
+                    uiView.image = debugData.image
+                    uiView.title = debugData.title
+                    uiView.isFavorite = debugData.isFavorite
+                }
             }
         }
         .onAppear {
@@ -35,9 +50,7 @@ struct DebugView: View {
                 isFavorite = debugModel.isFavorite
             }
         }
-        
-        
-        
+   
     }
     
 }
@@ -45,13 +58,13 @@ struct DebugView: View {
 
 
 
-struct TesteEscaping<Content: View, DebugData: DebugModel>: View {
+struct TesteEscaping<Content: View>: View {
     
     let content: Content
     
     init(
-        _ debugData: Binding<DebugData?>,
-        @ViewBuilder content: @escaping (_ debugData: Binding<DebugData?>) -> Content
+        _ debugData: Binding<DebugModel?>,
+        @ViewBuilder content: @escaping (_ debugData: Binding<DebugModel?>) -> Content
     )  {
         self.content = content(debugData)
         
@@ -62,31 +75,57 @@ struct TesteEscaping<Content: View, DebugData: DebugModel>: View {
     
 }
 
-
-
-
-internal struct DebugCellRepresentable: UIViewRepresentable {
+protocol ContentViewUpdatable: UIViewRepresentable {
     
+    associatedtype ObservableModel: Observation.Observable
+    
+//    associatedtype ViewCreationFunction = (() -> UIViewType)
+    
+    
+    
+    typealias onStartType = (() -> UIViewType)
+    typealias onUpdateType = ((_ observableModel: ObservableModel?, _ uiView: UIViewType) -> Void)
+    
+
+    init(
+        debugData: Binding<ObservableModel?>,
+        onStart: @escaping onStartType,
+        onUpdate: @escaping onUpdateType
+    )
+    
+}
+
+extension ContentViewUpdatable {
+    
+    
+    
+    
+    
+}
+
+
+internal struct DebugCellRepresentable: ContentViewUpdatable {
+
     @Binding var debugData: DebugModel?
+    var onStart: (() -> CardCell)
+    var onUpdate: ((_ observableModel: DebugModel?, _ uiView: CardCell) -> Void)
+
+    init(
+        debugData: Binding<DebugModel?>,
+        onStart: @escaping () -> CardCell,
+        onUpdate: @escaping (_ model: DebugModel?, _ uiView: CardCell) -> Void
+    ) {
+        self.onStart = onStart
+        self.onUpdate = onUpdate
+        self._debugData = debugData
+    }
     
     func makeUIView(context: Context) -> CardCell {
-        let uiView = CardCell()
-        return uiView
+        return onStart()
     }
     
     func updateUIView(_ uiView: CardCell, context: Context) {
-        
-        guard let debugData else {
-            uiView.image = nil
-            uiView.title = nil
-            uiView.isFavorite = nil
-            return
-        }
-        
-        uiView.image = debugData.image
-        uiView.title = debugData.title
-        uiView.isFavorite = debugData.isFavorite
-        
+        onUpdate(debugData, uiView)
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
