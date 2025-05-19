@@ -1,5 +1,5 @@
 //
-//  ContentViewUpdatable.swift
+//  CollectionViewCellRepresentable.swift
 //  VentUI
 //
 //  Created by Matheus Silveira Venturini on 19/05/25.
@@ -10,8 +10,6 @@ import SwiftUI
 import UIKit
 import Observation
 import SwiftData
-
-
 
 public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresentable {
     

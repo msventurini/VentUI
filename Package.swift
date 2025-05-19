@@ -72,6 +72,7 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     case ventUI = "VentUI"
     case ventUITests = "VentUITests"
     case cardCellKit = "CardCellKit"
+    case cocoaAdapterKit = "CocoaAdapterKit"
     case ventUIDebugKit = "VentUIDebugKit"
     
     
@@ -135,12 +136,12 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     var dependencies: [Target.Dependency] {
         switch self {
         case .ventUI:
-            [.target(name: Pkg.cardCellKit(), condition: nil)]
+            [.target(name: Pkg.cocoaAdapterKit(), condition: nil), .target(name: Pkg.cardCellKit(), condition: nil)]
         case .ventUITests:
             [.targetItem(name: Pkg.ventUI(), condition: nil)]
         case .cardCellKit:
             [.target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))]
-        case .ventUIDebugKit:
+        case .ventUIDebugKit, .cocoaAdapterKit:
             []
         }
     }
