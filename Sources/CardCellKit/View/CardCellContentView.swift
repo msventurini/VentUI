@@ -118,5 +118,5 @@ extension CardCellContentView {
 }
 
 #Preview {
-    DebugView()
+    DebugView(debugModel: nil)
 }

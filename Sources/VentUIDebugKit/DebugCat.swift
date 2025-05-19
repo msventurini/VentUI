@@ -8,9 +8,8 @@
 
 import SwiftUI
 import UIKit
-import Observation
 
-public enum DebugCat: String, Identifiable {
+public enum DebugCat: String, Identifiable, CaseIterable, Hashable {
     
     public var id: String {
         return self.rawValue

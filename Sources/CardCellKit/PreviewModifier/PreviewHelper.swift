@@ -1,14 +1,11 @@
 //
-//  aaaa.swift
+//  PreviewHelper.swift
 //  VentUI
 //
 //  Created by Matheus Silveira Venturini on 18/05/25.
 //
 
 import SwiftUI
+import SwiftData
+import VentUIDebugKit
 
-struct a: View {
-    var body: some View {
-        Text("a")
-    }
-}

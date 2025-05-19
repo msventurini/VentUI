@@ -8,16 +8,29 @@
 
 import SwiftUI
 import UIKit
-import Observation
+import SwiftData
 
-@Observable public class DebugModel {
-    public var image: UIImage?
-    public var title: String?
-    public var isFavorite: Bool?
+
+@Model public final class DebugModel {
     
-    public init(image: UIImage? = nil, title: String? = nil, isFavorite: Bool? = nil) {
+    public var image: Data
+    public var title: String
+    public var isFavorite: Bool
+    
+    public init(image: Data, title: String) {
         self.image = image
         self.title = title
-        self.isFavorite = isFavorite
+        self.isFavorite = false
     }
+}
+
+
+
+
+
+
+
+#Preview(traits: .modifier(PreviewDebugHelper())) {
+    Teste()
+    
 }

@@ -9,84 +9,36 @@ import SwiftUI
 import UIKit
 import Observation
 import VentUIDebugKit
+import SwiftData
 
 struct DebugView: View {
     
-    @State var catModel: DebugModel
+    let debugModel: DebugModel?
+   
+    @State private var title: String = ""
+    @State private var image: Data = .init()
+    @State private var isFavorite: Bool = false
     
-    var titleButtonLabel: String {
-        (catModel.title == nil) ? "Add Title" : "Remove Title"
-    }
     
-    
-    
-    init() {
-     
-        self.catModel = .init(image: DebugCat.oliver.uiImage, title: DebugCat.oliver.id)
-        
-    }
     
     var body: some View {
         HStack {
             
-            VStack {
+            
+            DebugCellRepresentable(title: $title, image: $image, isFavorite: $isFavorite)
+            
+            
+            
+            
+            
+        }
+        .onAppear {
+            if let debugModel {
                 
-                
-                Canvas { context, size in
-                    context.stroke(
-                        Path(ellipseIn: CGRect(origin: .zero, size: size)),
-                        with: .color(.green),
-                        lineWidth: 4)
-                }
-                .frame(width: 300, height: 200)
-                
-                .border(Color.blue)
-                
-                ZStack {
-                    
-                    Image(systemName: "ladybug")
-                        .foregroundStyle(.blue)
-                        .fontWeight(.black)
-                        
-
-                    Image(systemName: "ladybug.fill")
-                        .symbolRenderingMode(.multicolor)
-                        .fontWeight(.thin)
-                        .background {
-                            Image(systemName: "ladybug")
-                                .fontWeight(.semibold)
-                        }
-                        .font(.largeTitle)
-                    
-                        
-                }
-                
-                
-                Button {
-                    
-                    if catModel.title == nil {
-                        catModel.title = DebugCat.oliver.rawValue
-                    } else {
-                        catModel.title = nil
-                    }
-                    
-                } label: {
-                    Text(titleButtonLabel)
-                }
-                .buttonStyle(.borderedProminent)
-                DebugCellRepresentable(debugModel: $catModel)
+                title = debugModel.title
+                image = debugModel.image
+                isFavorite = debugModel.isFavorite
             }
-            
-            
-            
-            VStack {
-                
-                
-                
-            }
-            .frame(width: 110)
-            
-            
         }
         
         
@@ -95,10 +47,14 @@ struct DebugView: View {
     
 }
 
+
+
+
 internal struct DebugCellRepresentable: UIViewRepresentable {
     
-    @Binding var debugModel: DebugModel
-    
+    @Binding var title: String
+    @Binding var image: Data
+    @Binding var isFavorite: Bool
     
     func makeUIView(context: Context) -> CardCell {
         let uiView = CardCell()
@@ -106,8 +62,10 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CardCell, context: Context) {
-        uiView.image = debugModel.image
+        uiView.image = UIImage(data: image)
+        uiView.title = title
 
+        
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
@@ -118,8 +76,14 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
     
 }
 
-#Preview {
-    DebugView()
-//    DebugCellRepresentable()
+#Preview(traits: .modifier(PreviewDebugHelper())) {
+    
+    @Previewable @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
+    
+    @Previewable @Environment(\.modelContext) var modelContext
+    
+    ForEach(debugModels) { model in
+        DebugView(debugModel: model)
+    }
+    
 }
-

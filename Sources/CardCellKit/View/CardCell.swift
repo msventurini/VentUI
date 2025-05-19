@@ -52,5 +52,5 @@ class CardCell: UICollectionViewCell {
 }
 
 #Preview {
-    DebugView()
+    DebugView(debugModel: nil)
 }
