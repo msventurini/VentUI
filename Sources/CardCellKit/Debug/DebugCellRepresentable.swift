@@ -14,7 +14,7 @@ import SwiftData
 
 struct DebugView: View {
     
-    let debugModel: DebugModel?
+    @State var debugModel: DebugModel? = nil
    
     @State private var title: String? = nil
     @State private var imageData: Data? = nil
@@ -23,8 +23,8 @@ struct DebugView: View {
     var body: some View {
         HStack {
 
-            TesteEscaping(debugModel) { titleData in
-                DebugCellRepresentable(debugData: .constant(titleData))
+            TesteEscaping($debugModel) { $debugData in
+                DebugCellRepresentable(debugData: $debugData)
             }
         }
         .onAppear {
@@ -45,15 +45,15 @@ struct DebugView: View {
 
 
 
-struct TesteEscaping<Content: View, DebugData: UniversalDebugData>: View {
+struct TesteEscaping<Content: View, DebugData: DebugModel>: View {
     
     let content: Content
     
     init(
-        _ data: DebugData?,
-        @ViewBuilder content: @escaping (_ data: DebugData?) -> Content
+        _ debugData: Binding<DebugData?>,
+        @ViewBuilder content: @escaping (_ debugData: Binding<DebugData?>) -> Content
     )  {
-        self.content = content(data)
+        self.content = content(debugData)
         
     }
     var body: some View {
