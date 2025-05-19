@@ -10,17 +10,24 @@ import UIKit
 
 class CardCell: UICollectionViewCell {
     
+    var title: String? {
+        didSet {
+            setNeedsUpdateConfiguration()
+        }
+    }
+    
     var image: UIImage? {
         didSet {
             setNeedsUpdateConfiguration()
         }
     }
     
-    var title: String? {
+    var isFavorite: Bool? {
         didSet {
             setNeedsUpdateConfiguration()
         }
     }
+    
     
     override init(frame: CGRect) {
         self.image = nil

@@ -21,7 +21,7 @@ public protocol UniversalDebugData {
     associatedtype FavoriteData = Bool
     
     var imageData: ImageData? { get set }
-//    var image: UIImage? { get }
+    var image: UIImage? { get }
     var title: TitleData? { get set }
     var isFavorite: FavoriteData? { get set }
 }
@@ -32,6 +32,14 @@ public protocol UniversalDebugData {
     public var imageData: Data?
     public var title: String?
     public var isFavorite: Bool?
+    public var image: UIImage? {
+        guard
+            let imageData
+        else {
+            return nil
+        }
+        return UIImage(data: imageData)
+    }
     
     
     public init(imageData: Data? = nil, title: String? = nil, isFavorite: Bool? = nil) {

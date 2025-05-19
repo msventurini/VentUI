@@ -22,9 +22,9 @@ struct DebugView: View {
     
     var body: some View {
         HStack {
-//            Text("a")
-            TesteEscaping(debugModel!) { titleData in
-                DebugCellRepresentable(title: $title, imageData: $imageData, isFavorite: $isFavorite)
+
+            TesteEscaping(debugModel) { titleData in
+                DebugCellRepresentable(debugData: .constant(titleData))
             }
         }
         .onAppear {
@@ -50,8 +50,8 @@ struct TesteEscaping<Content: View, DebugData: UniversalDebugData>: View {
     let content: Content
     
     init(
-        _ data: DebugData,
-        @ViewBuilder content: @escaping (_ data: DebugData) -> Content
+        _ data: DebugData?,
+        @ViewBuilder content: @escaping (_ data: DebugData?) -> Content
     )  {
         self.content = content(data)
         
@@ -67,16 +67,7 @@ struct TesteEscaping<Content: View, DebugData: UniversalDebugData>: View {
 
 internal struct DebugCellRepresentable: UIViewRepresentable {
     
-    @Binding var title: String?
-    @Binding var imageData: Data?
-    @Binding var isFavorite: Bool?
-    
-    public var image: UIImage? {
-        guard let imageData else {
-            return nil
-        }
-        return UIImage(data: imageData)
-    }
+    @Binding var debugData: DebugModel?
     
     func makeUIView(context: Context) -> CardCell {
         let uiView = CardCell()
@@ -84,9 +75,17 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CardCell, context: Context) {
-        uiView.image = image
-        uiView.title = title
-
+        
+        guard let debugData else {
+            uiView.image = nil
+            uiView.title = nil
+            uiView.isFavorite = nil
+            return
+        }
+        
+        uiView.image = debugData.image
+        uiView.title = debugData.title
+        uiView.isFavorite = debugData.isFavorite
         
     }
     
