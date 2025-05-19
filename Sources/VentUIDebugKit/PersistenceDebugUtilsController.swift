@@ -17,7 +17,7 @@ public class PersistenceDebugUtilsController {
             for: DebugModel.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         DebugCat.allCases
-            .map( { DebugModel(image: $0.uiImage.pngData()!, title: $0.rawValue) } )
+            .map( { DebugModel(imageData: $0.uiImage.pngData()!, title: $0.rawValue) } )
             .forEach( { container.mainContext.insert($0) } )
         
         return container

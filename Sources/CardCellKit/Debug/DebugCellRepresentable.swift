@@ -16,21 +16,22 @@ struct DebugView: View {
     
     let debugModel: DebugModel?
    
-    @State private var title: String = ""
-    @State private var image: Data = .init()
-    @State private var isFavorite: Bool = false
+    @State private var title: String? = nil
+    @State private var imageData: Data? = nil
+    @State private var isFavorite: Bool? = nil
     
     var body: some View {
         HStack {
+//            Text("a")
             TesteEscaping(debugModel!) { titleData in
-                Text(titleData.title)
+                DebugCellRepresentable(title: $title, imageData: $imageData, isFavorite: $isFavorite)
             }
         }
         .onAppear {
             if let debugModel {
                 
                 title = debugModel.title
-                image = debugModel.image
+                imageData = debugModel.imageData
                 isFavorite = debugModel.isFavorite
             }
         }
@@ -44,13 +45,13 @@ struct DebugView: View {
 
 
 
-struct TesteEscaping<Content: View, Data: UniversalDebugData>: View {
+struct TesteEscaping<Content: View, DebugData: UniversalDebugData>: View {
     
     let content: Content
     
     init(
-        _ data: Data,
-        @ViewBuilder content: @escaping (_ data: Data) -> Content
+        _ data: DebugData,
+        @ViewBuilder content: @escaping (_ data: DebugData) -> Content
     )  {
         self.content = content(data)
         
@@ -66,9 +67,16 @@ struct TesteEscaping<Content: View, Data: UniversalDebugData>: View {
 
 internal struct DebugCellRepresentable: UIViewRepresentable {
     
-    @Binding var title: String
-    @Binding var image: Data
-    @Binding var isFavorite: Bool
+    @Binding var title: String?
+    @Binding var imageData: Data?
+    @Binding var isFavorite: Bool?
+    
+    public var image: UIImage? {
+        guard let imageData else {
+            return nil
+        }
+        return UIImage(data: imageData)
+    }
     
     func makeUIView(context: Context) -> CardCell {
         let uiView = CardCell()
@@ -76,7 +84,7 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CardCell, context: Context) {
-        uiView.image = UIImage(data: image)
+        uiView.image = image
         uiView.title = title
 
         
@@ -100,25 +108,4 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
         DebugView(debugModel: model)
     }
     
-}
-
-struct TesteEscapingExt: View {
-    
-    let debugModel: DebugModel
-    
-    var body: some View {
-        
-//        TesteEscaping(debugModel) { titleData in
-//            <#code#>
-//        }
-        TesteEscaping(debugModel) { titleData in
-            
-        }
-//        TesteEscaping(debugModel) { data in
-//            data.
-//        }
-//        TesteEscaping(debugModel) { data in
-//            data.
-//        }
-    }
 }

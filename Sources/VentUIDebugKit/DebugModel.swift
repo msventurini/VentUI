@@ -20,35 +20,34 @@ public protocol UniversalDebugData {
     associatedtype TitleData = String
     associatedtype FavoriteData = Bool
     
-    var image: ImageData { get set }
-    var title: TitleData { get set }
-    var isFavorite: FavoriteData { get set }
+    var imageData: ImageData? { get set }
+//    var image: UIImage? { get }
+    var title: TitleData? { get set }
+    var isFavorite: FavoriteData? { get set }
 }
 
 @Model public final class DebugModel: UniversalDebugData {
     
-//    public typealias ImageData = Data
-    public typealias TitleData = String
-    public typealias FavoriteData = Bool
     
-    public var image: Data
-    public var title: String
-    public var isFavorite: Bool
+    public var imageData: Data?
+    public var title: String?
+    public var isFavorite: Bool?
     
-    public init(image: Data, title: String) {
-        self.image = image
+    
+    public init(imageData: Data? = nil, title: String? = nil, isFavorite: Bool? = nil) {
+        self.imageData = imageData
         self.title = title
-        self.isFavorite = false
+        self.isFavorite = isFavorite
     }
 }
 
 
 
 
-
-
-
-#Preview(traits: .modifier(PreviewDebugHelper())) {
-    Teste()
-    
-}
+//
+//
+//
+//#Preview(traits: .modifier(PreviewDebugHelper())) {
+//    Teste()
+//    
+//}
