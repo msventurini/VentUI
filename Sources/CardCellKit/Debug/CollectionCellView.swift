@@ -23,6 +23,10 @@ struct DebugView: View {
                 CollectionCellView {
                     CardCell()
                 }
+                CollectionCellView(item: $debugModel) {
+                    CardCell()
+                }
+
                 
                 CollectionCellView(item: $debugModel) {
                     
@@ -66,29 +70,13 @@ struct TesteEscaping<Content: View>: View {
 
 
 
-internal struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellRepresentable {
+struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellRepresentable {
     
     @Binding var item: CollectionItem?
     
     var onStart: (() -> CardCell)
-    var onUpdate: ((_ item: CollectionItem, _ uiView: CardCell) -> Void)?
-    
-    init(onStart: @escaping () -> CardCell) {
-        self.onStart = onStart
-        self.onUpdate = nil
-        self._item = .constant(nil)
-    }
-    
-    init(
-        item: Binding<CollectionItem?>,
-        onStart: @escaping () -> CardCell,
-        onUpdate: @escaping ((_ item: CollectionItem, _ uiView: CardCell) -> Void)
-    ) {
-        self.onStart = onStart
-        self.onUpdate = onUpdate
-        self._item = item
-    }
-    
+    var updateAction: ((_ item: CollectionItem, _ uiView: CardCell) -> Void)?
+
 }
 
 

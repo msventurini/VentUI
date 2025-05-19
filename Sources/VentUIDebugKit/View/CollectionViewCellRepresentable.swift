@@ -21,22 +21,37 @@ public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresent
     var item: CollectionItem? { get set }
     
     var onStart: (() -> CollectionCellType) { get }
-    var onUpdate: ((_ observableModel: CollectionItem, _ uiView: CollectionCellType) -> Void)? { get }
+    var updateAction: ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)? { get }
 
-    init(onStart: @escaping () -> CollectionCellType)
-    
     init(
         item: Binding<CollectionItem?>,
         onStart: @escaping () -> CollectionCellType,
-        onUpdate: @escaping(
-            _ item: CollectionItem,
-            _ uiView: CollectionCellType) -> Void)
-    
-    
+        updateAction: ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)?
+    )
     
 }
 
 public extension CollectionViewCellRepresentable {
+    
+    
+    init(onStart: @escaping () -> CollectionCellType) {
+        self.init(
+            item: .constant(nil),
+            onStart: onStart, updateAction: nil
+        )
+    }
+    
+    init(
+        item: Binding<CollectionItem?>,
+        onStart: @escaping () -> CollectionCellType,
+        onUpdate: @escaping ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)
+    ) {
+        self.init(
+            item: item,
+            onStart: onStart,
+            updateAction: onUpdate
+        )
+    }
     
     
     func makeUIView(context: Context) -> CollectionCellType {
@@ -46,15 +61,16 @@ public extension CollectionViewCellRepresentable {
     func updateUIView(_ uiView: CollectionCellType, context: Context) {
         guard
             let item,
-            let onUpdate
+            let updateAction
         else {
             return
         }
-        onUpdate(item, uiView)
+        updateAction(item, uiView)
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: CollectionCellType, context: Context) -> CGSize? {
         return .init(width: 250, height: 200)
     }
+    
     
 }
