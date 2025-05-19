@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 class CardCell: UICollectionViewCell {
-
+    
     var image: UIImage? {
         didSet {
             setNeedsUpdateConfiguration()

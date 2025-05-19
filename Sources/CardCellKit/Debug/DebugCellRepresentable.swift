@@ -11,6 +11,7 @@ import Observation
 import VentUIDebugKit
 import SwiftData
 
+
 struct DebugView: View {
     
     let debugModel: DebugModel?
@@ -19,18 +20,11 @@ struct DebugView: View {
     @State private var image: Data = .init()
     @State private var isFavorite: Bool = false
     
-    
-    
     var body: some View {
         HStack {
-            
-            
-            DebugCellRepresentable(title: $title, image: $image, isFavorite: $isFavorite)
-            
-            
-            
-            
-            
+            TesteEscaping(debugModel!) { titleData in
+                Text(titleData.title)
+            }
         }
         .onAppear {
             if let debugModel {
@@ -43,6 +37,26 @@ struct DebugView: View {
         
         
         
+    }
+    
+}
+
+
+
+
+struct TesteEscaping<Content: View, Data: UniversalDebugData>: View {
+    
+    let content: Content
+    
+    init(
+        _ data: Data,
+        @ViewBuilder content: @escaping (_ data: Data) -> Content
+    )  {
+        self.content = content(data)
+        
+    }
+    var body: some View {
+        content
     }
     
 }
@@ -86,4 +100,25 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
         DebugView(debugModel: model)
     }
     
+}
+
+struct TesteEscapingExt: View {
+    
+    let debugModel: DebugModel
+    
+    var body: some View {
+        
+//        TesteEscaping(debugModel) { titleData in
+//            <#code#>
+//        }
+        TesteEscaping(debugModel) { titleData in
+            
+        }
+//        TesteEscaping(debugModel) { data in
+//            data.
+//        }
+//        TesteEscaping(debugModel) { data in
+//            data.
+//        }
+    }
 }
