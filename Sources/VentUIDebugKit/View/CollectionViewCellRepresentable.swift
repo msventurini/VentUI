@@ -11,23 +11,26 @@ import UIKit
 import Observation
 import SwiftData
 
-public protocol CollectionViewCellRepresentable: UIViewRepresentable {
-    
-    associatedtype ObservableModel: Observation.Observable
 
-    var observableModel: ObservableModel? { get set }
-    
-    var onStart: (() -> UIViewType) { get }
-    var onUpdate: ((_ observableModel: ObservableModel, _ uiView: UIViewType) -> Void)? { get }
 
-    init(onStart: @escaping () -> UIViewType)
+public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresentable {
+    
+    associatedtype CollectionCellType: UICollectionViewCell
+    associatedtype CollectionItem: Hashable
+    
+    var item: CollectionItem? { get set }
+    
+    var onStart: (() -> CollectionCellType) { get }
+    var onUpdate: ((_ observableModel: CollectionItem, _ uiView: CollectionCellType) -> Void)? { get }
+
+    init(onStart: @escaping () -> CollectionCellType)
     
     init(
-        observableModel: Binding<ObservableModel?>,
-        onStart: @escaping () -> UIViewType,
+        item: Binding<CollectionItem?>,
+        onStart: @escaping () -> CollectionCellType,
         onUpdate: @escaping(
-            _ observableModel: ObservableModel,
-            _ uiView: UIViewType) -> Void)
+            _ item: CollectionItem,
+            _ uiView: CollectionCellType) -> Void)
     
     
     
@@ -36,19 +39,22 @@ public protocol CollectionViewCellRepresentable: UIViewRepresentable {
 public extension CollectionViewCellRepresentable {
     
     
-    func makeUIView(context: Context) -> UIViewType {
+    func makeUIView(context: Context) -> CollectionCellType {
         return onStart()
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    func updateUIView(_ uiView: CollectionCellType, context: Context) {
         guard
-            let observableModel,
+            let item,
             let onUpdate
         else {
             return
         }
-        onUpdate(observableModel, uiView)
+        onUpdate(item, uiView)
     }
     
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: CollectionCellType, context: Context) -> CGSize? {
+        return .init(width: 250, height: 200)
+    }
     
 }

@@ -20,16 +20,15 @@ struct DebugView: View {
         
         
             VStack {
-                DebugCellRepresentable {
+                CollectionCellView {
                     CardCell()
                 }
                 
-                DebugCellRepresentable(observableModel: $debugModel) {
+                CollectionCellView(item: $debugModel) {
                     
                     CardCell()
                     
-                }
-                onUpdate: { debugData, uiView in
+                } onUpdate: { debugData, uiView in
                     
                     uiView.image = debugData.image
                     uiView.title = debugData.title
@@ -67,35 +66,28 @@ struct TesteEscaping<Content: View>: View {
 
 
 
-internal struct DebugCellRepresentable: CollectionViewCellRepresentable {
+internal struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellRepresentable {
     
-    @Binding var observableModel: DebugModel?
+    @Binding var item: CollectionItem?
     
     var onStart: (() -> CardCell)
-    var onUpdate: ((_ observableModel: DebugModel, _ uiView: CardCell) -> Void)?
+    var onUpdate: ((_ item: CollectionItem, _ uiView: CardCell) -> Void)?
     
     init(onStart: @escaping () -> CardCell) {
         self.onStart = onStart
         self.onUpdate = nil
-        self._observableModel = .constant(nil)
+        self._item = .constant(nil)
     }
     
     init(
-        observableModel: Binding<DebugModel?>,
+        item: Binding<CollectionItem?>,
         onStart: @escaping () -> CardCell,
-        onUpdate: @escaping ((_ model: DebugModel, _ uiView: CardCell) -> Void)
+        onUpdate: @escaping ((_ item: CollectionItem, _ uiView: CardCell) -> Void)
     ) {
         self.onStart = onStart
         self.onUpdate = onUpdate
-        self._observableModel = observableModel
+        self._item = item
     }
-    
-    
-    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-        return .init(width: 250, height: 200)
-    }
-    
-    typealias UIViewType = CardCell
     
 }
 
