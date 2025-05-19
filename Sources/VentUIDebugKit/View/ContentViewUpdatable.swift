@@ -18,13 +18,13 @@ public protocol ContentViewUpdatable: UIViewRepresentable {
     var observableModel: ObservableModel? { get set }
     
     var onStart: (() -> UIViewType) { get }
-    var onUpdate: (_ observableModel: ObservableModel?, _ uiView: UIViewType) -> Void { get }
+    var onUpdate: (_ observableModel: ObservableModel, _ uiView: UIViewType) -> Void { get }
 
     init(
         observableModel: Binding<ObservableModel?>,
         onStart: @escaping () -> UIViewType,
         onUpdate: @escaping(
-            _ observableModel: ObservableModel?,
+            _ observableModel: ObservableModel,
             _ uiView: UIViewType) -> Void)
     
 }
@@ -37,7 +37,10 @@ public extension ContentViewUpdatable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
+        guard let observableModel else { return }
         onUpdate(observableModel, uiView)
+        
+        
     }
     
     

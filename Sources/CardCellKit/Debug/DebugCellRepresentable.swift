@@ -24,14 +24,7 @@ struct DebugView: View {
                     CardCell()
                     
                 } onUpdate: { debugData, uiView in
-                    
-                    guard let debugData else {
-                        uiView.image = nil
-                        uiView.title = nil
-                        uiView.isFavorite = nil
-                        return
-                    }
-                    
+
                     uiView.image = debugData.image
                     uiView.title = debugData.title
                     uiView.isFavorite = debugData.isFavorite
@@ -71,12 +64,12 @@ internal struct DebugCellRepresentable: ContentViewUpdatable {
     @Binding var observableModel: DebugModel?
     
     var onStart: (() -> CardCell)
-    var onUpdate: ((_ observableModel: DebugModel?, _ uiView: CardCell) -> Void)
+    var onUpdate: ((_ observableModel: DebugModel, _ uiView: CardCell) -> Void)
 
     init(
         observableModel: Binding<DebugModel?>,
         onStart: @escaping () -> CardCell,
-        onUpdate: @escaping (_ model: DebugModel?, _ uiView: CardCell) -> Void
+        onUpdate: @escaping (_ model: DebugModel, _ uiView: CardCell) -> Void
     ) {
         self.onStart = onStart
         self.onUpdate = onUpdate
