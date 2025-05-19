@@ -10,21 +10,7 @@ import SwiftUI
 import UIKit
 import SwiftData
 
-public protocol UniversalDebugData {
-    
-//    associatedtype ImageData: DataProtocol
-//    associatedtype TitleData: StringProtocol
-//    associatedtype FavoriteData: ExpressibleByBooleanLiteral
-    
-    associatedtype ImageData = Data
-    associatedtype TitleData = String
-    associatedtype FavoriteData = Bool
-    
-    var imageData: ImageData? { get set }
-    var image: UIImage? { get }
-    var title: TitleData? { get set }
-    var isFavorite: FavoriteData? { get set }
-}
+
 
 @Model public final class DebugModel: UniversalDebugData {
     
