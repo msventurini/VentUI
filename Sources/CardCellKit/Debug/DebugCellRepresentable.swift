@@ -5,14 +5,10 @@
 //  Created by Matheus Silveira Venturini on 18/05/25.
 //
 
-
 import SwiftUI
 import UIKit
 import Observation
 import VentUIDebugKit
-
-
-
 
 struct DebugView: View {
     
@@ -126,3 +122,4 @@ internal struct DebugCellRepresentable: UIViewRepresentable {
     DebugView()
 //    DebugCellRepresentable()
 }
+
