@@ -18,14 +18,14 @@ public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresent
     associatedtype CollectionCellType: UICollectionViewCell
     associatedtype CollectionItem: Hashable
     
-    var item: CollectionItem? { get set }
+    var item: CollectionItem { get }
     
-    var onStart: (() -> CollectionCellType) { get }
+    var onStart: ((_ item: CollectionItem) -> CollectionCellType) { get }
     var updateAction: ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)? { get }
 
     init(
-        item: Binding<CollectionItem?>,
-        onStart: @escaping () -> CollectionCellType,
+        item: CollectionItem,
+        onStart: @escaping (_ item: CollectionItem) -> CollectionCellType,
         updateAction: ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)?
     )
     
@@ -34,16 +34,16 @@ public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresent
 public extension CollectionViewCellRepresentable {
     
     
-    init(onStart: @escaping () -> CollectionCellType) {
+    init(item: CollectionItem, onStart: @escaping (_ item: CollectionItem) -> CollectionCellType) {
         self.init(
-            item: .constant(nil),
+            item: item,
             onStart: onStart, updateAction: nil
         )
     }
     
     init(
-        item: Binding<CollectionItem?>,
-        onStart: @escaping () -> CollectionCellType,
+        item: CollectionItem,
+        onStart: @escaping (_ item: CollectionItem) -> CollectionCellType,
         onUpdate: @escaping ((_ item: CollectionItem, _ uiView: CollectionCellType) -> Void)
     ) {
         self.init(
@@ -55,12 +55,11 @@ public extension CollectionViewCellRepresentable {
     
     
     func makeUIView(context: Context) -> CollectionCellType {
-        return onStart()
+        return onStart(item)
     }
     
     func updateUIView(_ uiView: CollectionCellType, context: Context) {
         guard
-            let item,
             let updateAction
         else {
             return

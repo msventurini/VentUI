@@ -13,38 +13,26 @@ import SwiftData
 
 
 struct DebugView: View {
-    
-    @State var debugModel: DebugModel? = nil
+    @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
     
     var body: some View {
-        
-        
+        ScrollView {
             VStack {
-                CollectionCellView {
-                    CardCell()
-                }
-                CollectionCellView(item: $debugModel) {
-                    CardCell()
-                }
-
                 
-                CollectionCellView(item: $debugModel) {
+                ForEach(debugModels) { modelItem in
                     
-                    CardCell()
-                    
-                } onUpdate: { debugData, uiView in
-                    
-                    uiView.image = debugData.image
-                    uiView.title = debugData.title
-                    uiView.isFavorite = debugData.isFavorite
-                    
+                    CollectionCellView(item: modelItem) { item in
+                        CardCell()
+                    } updateAction: { item, uiView in
+                        uiView.image = item.image
+                        uiView.title = item.title
+                        uiView.isFavorite = item.isFavorite
+                    }
                 }
             }
-        
-        
+        }
         
     }
-    
 }
 
 
@@ -72,11 +60,11 @@ struct TesteEscaping<Content: View>: View {
 
 struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellRepresentable {
     
-    @Binding var item: CollectionItem?
+    let item: CollectionItem
     
-    var onStart: (() -> CardCell)
+    var onStart: ((_ item: CollectionItem) -> CardCell)
     var updateAction: ((_ item: CollectionItem, _ uiView: CardCell) -> Void)?
-
+    
 }
 
 
@@ -85,14 +73,5 @@ struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellReprese
 
 
 #Preview(traits: .modifier(PreviewDebugHelper())) {
-    
-    @Previewable @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
-    
-    @Previewable @Environment(\.modelContext) var modelContext
-    ScrollView {
-        ForEach(debugModels) { model in
-            DebugView(debugModel: model)
-        }
-    }
-    
+    DebugView()
 }

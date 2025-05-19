@@ -69,10 +69,10 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     static let PkgName: String = "VentUI"
     
-    case VentUI = "VentUI"
-    case VentUITests = "VentUITests"
-    case CardCellKit = "CardCellKit"
-    case VentUIDebugKit = "VentUIDebugKit"
+    case ventUI = "VentUI"
+    case ventUITests = "VentUITests"
+    case cardCellKit = "CardCellKit"
+    case ventUIDebugKit = "VentUIDebugKit"
     
     
     
@@ -86,7 +86,7 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     var isTestTarget: Bool {
         switch self {
-        case .VentUITests:
+        case .ventUITests:
             true
         default:
             false
@@ -134,13 +134,13 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     var dependencies: [Target.Dependency] {
         switch self {
-        case .VentUI:
-            [.target(name: Pkg.CardCellKit(), condition: nil)]
-        case .VentUITests:
-            [.targetItem(name: Pkg.VentUI(), condition: nil)]
-        case .CardCellKit:
-            [.target(name: Pkg.VentUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))]
-        case .VentUIDebugKit:
+        case .ventUI:
+            [.target(name: Pkg.cardCellKit(), condition: nil)]
+        case .ventUITests:
+            [.targetItem(name: Pkg.ventUI(), condition: nil)]
+        case .cardCellKit:
+            [.target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))]
+        case .ventUIDebugKit:
             []
         }
     }

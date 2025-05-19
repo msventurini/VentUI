@@ -58,6 +58,6 @@ class CardCell: UICollectionViewCell {
     }
 }
 
-#Preview {
-    DebugView(debugModel: nil)
-}
+//#Preview {
+//    DebugView(debugModel: nil)
+//}
