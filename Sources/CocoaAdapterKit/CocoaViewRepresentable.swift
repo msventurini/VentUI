@@ -11,23 +11,27 @@ import SwiftUI
 
 
 struct CocoaView: CocoaViewRepresentable {
+    var onStart: StartFunction
     
-    var onStart: () -> UIView
+    var onUpdate: UpdateFunction?
     
-    var onUpdate: ((UIView) -> Void)?
-    
-    var sizeFitting: ((ProposedViewSize, UIView, Context) -> CGSize?)?
+    var sizeFitting: SizeFittingFunction?
     
     typealias UIViewType = UIView
 }
 
+
 public protocol CocoaViewRepresentable: UIViewRepresentable {
-    
-    var onStart: (() -> UIViewType) { get }
-    var onUpdate: ((_ uiView: UIViewType) -> Void)? { get }
-    var sizeFitting: ((_ proposal: ProposedViewSize, _ uiView: UIViewType, _ context: Context) -> CGSize?)? { get }
-    
+
+    typealias StartFunction = (() -> UIViewType)
+    typealias UpdateFunction = ((_ uiView: UIViewType) -> Void)
+    typealias SizeFittingFunction = (_ proposal: ProposedViewSize, _ uiView: UIViewType, _ context: Context) -> CGSize?
+
+    var onStart: (StartFunction) { get }
+    var onUpdate: (UpdateFunction)? { get }
+    var sizeFitting: (SizeFittingFunction)? { get }
 }
+
 
 public extension CocoaViewRepresentable {
     
@@ -42,6 +46,13 @@ public extension CocoaViewRepresentable {
             return
         }
         onUpdate(uiView)
+    }
+    
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        
+        guard let sizeFitting else { return proposal.replacingUnspecifiedDimensions()}
+        
+        return sizeFitting(proposal, uiView, context)
     }
     
     
@@ -65,20 +76,11 @@ struct CocoaViewEnvironmentBridge: ViewModifier {
     
 }
 
-//extension View {
-//    func borderedCaption() -> some View {
-//        modifier(BorderedCaption())
-//    }
-//}
-
-
-
-
 extension UIView {
     
     
     
-    @ViewBuilder var body: some View {
+    @ViewBuilder var body: some CocoaViewRepresentable {
         CocoaView {
             self.background(color: .blue)
         }
