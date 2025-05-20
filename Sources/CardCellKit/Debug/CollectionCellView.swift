@@ -25,15 +25,25 @@ struct DebugView: View {
                         let labelView = UILabel()
                         labelView.text = modelItem.title
                         return labelView
-                    } updateAction: { view in
-                        
                     }
+                    
+                    //                    testeRep {
+                    //                        let labelView = UILabel()
+                    //                        labelView.text = modelItem.title
+                    //                        return labelView
+                    //                    } onUpdate: { in
+                    //
+                    //                    }: { view in
+                    //
+                    //                    }
                 }
             }
         }
         
     }
 }
+
+//protocol AutoUIKitBuilder<uiContent, Content> where uiC
 
 
 
@@ -57,10 +67,12 @@ struct TesteEscaping<Content: View>: View {
 
 
 struct testeRep: CocoaViewRepresentable {
+    
     var onStart: () -> UIView
     
-    var updateAction: ((UIView) -> Void)?
+    var onUpdate: ((UIView) -> Void)?
     
+    var sizeFitting: ((ProposedViewSize, UIView, Context) -> CGSize?)?
     typealias UIViewType = UIView
     
     

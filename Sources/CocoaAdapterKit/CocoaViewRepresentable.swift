@@ -9,6 +9,7 @@ import UIKit
 import SwiftUI
 
 
+
 struct CocoaView: CocoaViewRepresentable {
     
     var onStart: () -> UIView
@@ -48,18 +49,46 @@ public extension CocoaViewRepresentable {
 
 #Preview {
     
-    CocoaView {
+    VStack {
         UIView()
-    } onUpdate: { uiView in
-        
-    } sizeFitting: { proposed, uiView, context in
-        proposed.replacingUnspecifiedDimensions()
+            .body
+            .padding(.horizontal)
     }
-
     
 }
 
+struct CocoaViewEnvironmentBridge: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        content
+    }
+    
+}
+
+//extension View {
+//    func borderedCaption() -> some View {
+//        modifier(BorderedCaption())
+//    }
+//}
+
+
+
+
 extension UIView {
+    
+    
+    
+    @ViewBuilder var body: some View {
+        CocoaView {
+            self.background(color: .blue)
+        }
+    }
+    
+    
+    @ViewBuilder func declarativeSetup() -> some View {
+        
+    }
+    
     
     func background(color: UIColor) -> UIView {
         self.backgroundColor = color
