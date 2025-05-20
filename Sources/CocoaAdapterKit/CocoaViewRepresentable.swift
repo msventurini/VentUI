@@ -9,8 +9,8 @@ import UIKit
 import SwiftUI
 
 
-struct TesteRep: CocoaViewRepresentable {
-
+struct CocoaView: CocoaViewRepresentable {
+    
     var onStart: () -> UIView
     
     var onUpdate: ((UIView) -> Void)?
@@ -80,13 +80,27 @@ public extension CocoaViewRepresentable {
 }
 
 #Preview {
-    TesteRep {
-        let view = UIView()
-        view.backgroundColor = .red
-        return view
-    } onUpdate: { uiView in
-        
-    } sizeFitting: { proposedViewSize, uiView, context in
-        return .init(width: 200, height: 200)
+    CocoaView {
+        UIView()
+            .background(color: .brown)
     }
+    //    CocoaView {
+    //        let view = UIView()
+    //        view.backgroundColor = .red
+    //        return view
+    //    } onUpdate: { uiView in
+    //
+    //    } sizeFitting: { proposedViewSize, uiView, context in
+    //        return .init(width: 200, height: 200)
+    //    }
+}
+
+extension UIView {
+    
+    func background(color: UIColor) -> UIView {
+        self.backgroundColor = color
+        return self
+    }
+    
+    
 }
