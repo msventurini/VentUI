@@ -11,32 +11,37 @@ import SwiftUI
 
 
 struct CocoaView: CocoaViewRepresentable {
+    typealias UIViewType = UIView
+    
     var onStart: StartFunction
     
     var onUpdate: UpdateFunction?
     
     var sizeFitting: SizeFittingFunction?
     
-    typealias UIViewType = UIView
 }
 
 
 public protocol CocoaViewRepresentable: UIViewRepresentable {
-
-    typealias StartFunction = (() -> UIViewType)
-    typealias UpdateFunction = ((_ uiView: UIViewType) -> Void)
+    
+    typealias StartFunction = ((_ context: UIViewRepresentableContext<Self>) -> UIViewType)
+    typealias UpdateFunction = ((_ uiView: UIViewType, _ context: Context) -> Void)
     typealias SizeFittingFunction = (_ proposal: ProposedViewSize, _ uiView: UIViewType, _ context: Context) -> CGSize?
 
     var onStart: (StartFunction) { get }
     var onUpdate: (UpdateFunction)? { get }
     var sizeFitting: (SizeFittingFunction)? { get }
+    
+    func makeUIView(context: Context) -> UIViewType
+    func updateUIView(_ uiView: UIViewType, context: Context)
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize?
+    
 }
-
 
 public extension CocoaViewRepresentable {
     
     func makeUIView(context: Context) -> UIViewType {
-        return onStart()
+        return onStart(context)
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
@@ -45,7 +50,7 @@ public extension CocoaViewRepresentable {
         else {
             return
         }
-        onUpdate(uiView)
+        onUpdate(uiView, context)
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
@@ -63,7 +68,7 @@ public extension CocoaViewRepresentable {
     VStack {
         UIView()
             .body
-            .padding(.horizontal)
+
     }
     
 }
@@ -78,11 +83,13 @@ struct CocoaViewEnvironmentBridge: ViewModifier {
 
 extension UIView {
     
-    
-    
     @ViewBuilder var body: some CocoaViewRepresentable {
-        CocoaView {
-            self.background(color: .blue)
+
+        CocoaView { context in
+            let view = self
+            self.backgroundColor = .purple
+            return view
+                
         }
     }
     
@@ -99,3 +106,5 @@ extension UIView {
     
     
 }
+
+

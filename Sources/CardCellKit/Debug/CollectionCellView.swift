@@ -70,7 +70,7 @@ struct testeRep: CocoaViewRepresentable {
     
     var onStart: () -> UIView
     
-    var onUpdate: ((UIView) -> Void)?
+    var onUpdate: ((UIView, Context) -> Void)?
     
     var sizeFitting: ((ProposedViewSize, UIView, Context) -> CGSize?)?
     typealias UIViewType = UIView
