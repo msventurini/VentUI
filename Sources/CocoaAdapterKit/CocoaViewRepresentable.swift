@@ -8,6 +8,17 @@
 import UIKit
 import SwiftUI
 
+
+struct TesteRep: CocoaViewRepresentable {
+    var onStart: () -> UIView
+    
+    var updateAction: ((UIView) -> Void)?
+    
+    typealias UIViewType = UIView
+    
+    
+}
+
 public protocol CocoaViewResizable where Self: CocoaViewRepresentable {
     
     func sizeFitting(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize?
@@ -60,9 +71,22 @@ public extension CocoaViewRepresentable {
         updateAction(uiView)
     }
     
-    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-        return .init(width: 250, height: 200)
+
+    
+    
+}
+
+//    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+//        return .init(width: 250, height: 200)
+//    }
+
+#Preview {
+    TesteRep {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    } updateAction: { uiView in
+        
     }
-    
-    
+
 }
