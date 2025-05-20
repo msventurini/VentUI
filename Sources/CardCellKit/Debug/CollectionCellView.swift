@@ -15,38 +15,28 @@ import CocoaAdapterKit
 
 struct DebugView: View {
     @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
+    let label: UILabel = {
+        let labelView = UILabel()
+        
+        labelView.text = "aaaaa"
+        return labelView
+    }()
     
     var body: some View {
         ScrollView {
             VStack {
                 
                 ForEach(debugModels) { modelItem in
-                    testeRep {
-                        let labelView = UILabel()
-                        labelView.text = modelItem.title
-                        return labelView
-                    }
+
+                    label
+                        .representableView()
                     
-                    //                    testeRep {
-                    //                        let labelView = UILabel()
-                    //                        labelView.text = modelItem.title
-                    //                        return labelView
-                    //                    } onUpdate: { in
-                    //
-                    //                    }: { view in
-                    //
-                    //                    }
                 }
             }
         }
         
     }
 }
-
-//protocol AutoUIKitBuilder<uiContent, Content> where uiC
-
-
-
 
 struct TesteEscaping<Content: View>: View {
     
@@ -66,17 +56,6 @@ struct TesteEscaping<Content: View>: View {
 }
 
 
-struct testeRep: CocoaViewRepresentable {
-    
-    var onStart: () -> UIView
-    
-    var onUpdate: ((UIView, Context) -> Void)?
-    
-    var sizeFitting: ((ProposedViewSize, UIView, Context) -> CGSize?)?
-    typealias UIViewType = UIView
-    
-    
-}
 
 
 #Preview(traits: .modifier(PreviewDebugHelper())) {
