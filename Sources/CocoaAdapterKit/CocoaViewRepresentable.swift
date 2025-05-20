@@ -19,13 +19,6 @@ struct TesteRep: CocoaViewRepresentable {
     
 }
 
-public protocol CocoaViewResizable where Self: CocoaViewRepresentable {
-    
-    func sizeFitting(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize?
-    
-}
-
-
 public protocol CocoaViewRepresentable: UIViewRepresentable {
     
     var onStart: (() -> UIViewType) { get }
@@ -70,15 +63,13 @@ public extension CocoaViewRepresentable {
         }
         updateAction(uiView)
     }
-    
-
-    
-    
 }
 
-//    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-//        return .init(width: 250, height: 200)
-//    }
+public protocol CocoaViewResizable where Self: CocoaViewRepresentable {
+
+    func sizeFitting(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize?
+
+}
 
 #Preview {
     TesteRep {
@@ -88,5 +79,4 @@ public extension CocoaViewRepresentable {
     } updateAction: { uiView in
         
     }
-
 }
