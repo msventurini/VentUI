@@ -10,23 +10,26 @@ import SwiftUI
 
 
 struct TesteRep: CocoaViewRepresentable {
+
     var onStart: () -> UIView
     
-    var updateAction: ((UIView) -> Void)?
+    var onUpdate: ((UIView) -> Void)?
+    
+    var sizeFitting: ((ProposedViewSize, UIView, Context) -> CGSize?)?
     
     typealias UIViewType = UIView
-    
-    
 }
 
 public protocol CocoaViewRepresentable: UIViewRepresentable {
     
     var onStart: (() -> UIViewType) { get }
-    var updateAction: ((_ uiView: UIViewType) -> Void)? { get }
-
+    var onUpdate: ((_ uiView: UIViewType) -> Void)? { get }
+    var sizeFitting: ((_ proposal: ProposedViewSize, _ uiView: UIViewType, _ context: Context) -> CGSize?)? { get }
+    
     init(
         onStart: @escaping () -> UIViewType,
-        updateAction: ((_ uiView: UIViewType) -> Void)?
+        onUpdate: ((_ uiView: UIViewType) -> Void)?,
+        sizeFitting: ((_ proposal: ProposedViewSize, _ uiView: UIViewType, _ context: Context) -> CGSize?)?
     )
     
 }
@@ -36,7 +39,9 @@ public extension CocoaViewRepresentable {
     
     init(onStart: @escaping () -> UIViewType) {
         self.init(
-            onStart: onStart, updateAction: nil
+            onStart: onStart,
+            onUpdate: nil,
+            sizeFitting: nil
         )
     }
     
@@ -46,10 +51,10 @@ public extension CocoaViewRepresentable {
     ) {
         self.init(
             onStart: onStart,
-            updateAction: onUpdate
+            onUpdate: onUpdate,
+            sizeFitting: nil
         )
     }
-    
     
     func makeUIView(context: Context) -> UIViewType {
         return onStart()
@@ -57,18 +62,21 @@ public extension CocoaViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
         guard
-            let updateAction
+            let onUpdate
         else {
             return
         }
-        updateAction(uiView)
+        onUpdate(uiView)
     }
-}
-
-public protocol CocoaViewResizable where Self: CocoaViewRepresentable {
-
-    func sizeFitting(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize?
-
+    
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        
+        guard let sizeFitting else {
+            return proposal.replacingUnspecifiedDimensions()
+        }
+        
+        return sizeFitting(proposal, uiView, context)
+    }
 }
 
 #Preview {
@@ -76,7 +84,9 @@ public protocol CocoaViewResizable where Self: CocoaViewRepresentable {
         let view = UIView()
         view.backgroundColor = .red
         return view
-    } updateAction: { uiView in
+    } onUpdate: { uiView in
         
+    } sizeFitting: { proposedViewSize, uiView, context in
+        return .init(width: 200, height: 200)
     }
 }
