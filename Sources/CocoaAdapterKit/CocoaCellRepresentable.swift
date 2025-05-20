@@ -5,13 +5,10 @@
 //  Created by Matheus Silveira Venturini on 19/05/25.
 //
 
-
 import SwiftUI
 import UIKit
-import Observation
-import SwiftData
 
-public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresentable {
+public protocol CocoaCellRepresentable<CollectionItem>: CocoaViewRepresentable {
     
     associatedtype CollectionCellType: UICollectionViewCell
     associatedtype CollectionItem: Hashable
@@ -29,7 +26,7 @@ public protocol CollectionViewCellRepresentable<CollectionItem>: UIViewRepresent
     
 }
 
-public extension CollectionViewCellRepresentable {
+public extension CocoaCellRepresentable {
     
     
     init(item: CollectionItem, onStart: @escaping (_ item: CollectionItem) -> CollectionCellType) {
@@ -64,10 +61,5 @@ public extension CollectionViewCellRepresentable {
         }
         updateAction(item, uiView)
     }
-    
-    func sizeThatFits(_ proposal: ProposedViewSize, uiView: CollectionCellType, context: Context) -> CGSize? {
-        return .init(width: 250, height: 200)
-    }
-    
     
 }

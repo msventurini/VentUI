@@ -111,9 +111,17 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
         
     }
     
-    static func allTargets() -> [Target] {
+    static func allTargets(exept target: Pkg? = nil) -> [Target] {
+        
+        guard let target else {
+            let targets = Pkg.allCases
+                .map( { $0.target } )
+            
+            return targets
+        }
         
         let targets = Pkg.allCases
+            .filter( { $0 != target } )
             .map( { $0.target } )
         
         return targets
@@ -136,12 +144,25 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     var dependencies: [Target.Dependency] {
         switch self {
         case .ventUI:
-            [.target(name: Pkg.cocoaAdapterKit(), condition: nil), .target(name: Pkg.cardCellKit(), condition: nil)]
+            [
+                .target(name: Pkg.cocoaAdapterKit(), condition: nil),
+                .target(name: Pkg.cardCellKit(), condition: nil),
+                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))
+            ]
         case .ventUITests:
-            [.targetItem(name: Pkg.ventUI(), condition: nil)]
+            [
+                .targetItem(name: Pkg.ventUI(), condition: nil)
+            ]
         case .cardCellKit:
-            [.target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))]
-        case .ventUIDebugKit, .cocoaAdapterKit:
+            [
+                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()])),
+                .target(name: Pkg.cocoaAdapterKit(), condition: .when(traits: [BuildConfig.debug()]))//tirar depois
+            ]
+        case .ventUIDebugKit:
+            [
+                .target(name: Pkg.cocoaAdapterKit(), condition: nil)
+            ]
+        case .cocoaAdapterKit:
             []
         }
     }

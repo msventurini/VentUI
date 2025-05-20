@@ -10,6 +10,7 @@ import UIKit
 import Observation
 import VentUIDebugKit
 import SwiftData
+import CocoaAdapterKit
 
 
 struct DebugView: View {
@@ -20,13 +21,12 @@ struct DebugView: View {
             VStack {
                 
                 ForEach(debugModels) { modelItem in
-                    
-                    CollectionCellView(item: modelItem) { item in
-                        CardCell()
-                    } updateAction: { item, uiView in
-                        uiView.image = item.image
-                        uiView.title = item.title
-                        uiView.isFavorite = item.isFavorite
+                    testeRep {
+                        let labelView = UILabel()
+                        labelView.text = modelItem.title
+                        return labelView
+                    } updateAction: { view in
+                        
                     }
                 }
             }
@@ -56,20 +56,15 @@ struct TesteEscaping<Content: View>: View {
 }
 
 
-
-
-struct CollectionCellView<CollectionItem: DebugModel>: CollectionViewCellRepresentable {
+struct testeRep: CocoaViewRepresentable {
+    var onStart: () -> UIView
     
-    let item: CollectionItem
+    var updateAction: ((UIView) -> Void)?
     
-    var onStart: ((_ item: CollectionItem) -> CardCell)
-    var updateAction: ((_ item: CollectionItem, _ uiView: CardCell) -> Void)?
+    typealias UIViewType = UIView
+    
     
 }
-
-
-
-
 
 
 #Preview(traits: .modifier(PreviewDebugHelper())) {
