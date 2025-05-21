@@ -7,6 +7,8 @@
 
 #if RELEASE
 
+import SwiftUI
+
 public struct TestBuildSettings: View {
     public var body: some View {
         Text("a")
