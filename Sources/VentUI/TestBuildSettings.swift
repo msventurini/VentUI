@@ -11,7 +11,7 @@ import SwiftUI
 
 public struct TestBuildSettings: View {
     
-    init() {
+    public init() {
         
     }
     
