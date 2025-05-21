@@ -30,6 +30,8 @@ public enum DebugCat: String, Identifiable, CaseIterable, Hashable {
         }
     }
     
-    
+    var isFavoriteDefaultValue: Bool {
+        return false
+    }
     
 }
