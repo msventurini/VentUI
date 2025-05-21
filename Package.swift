@@ -12,19 +12,6 @@ let package = Package(
     ],
     products: Pkg.allProducts(),
     targets: Pkg.allTargets()
-//    targets: [
-//        .target(name: Pkg.VentUI.name),
-//        .testTarget(name: "VentUITests",dependencies: ["VentUI"]),
-//        .target(name: "VentUIDebugKit"),
-//        .target(
-//            name: "CardCellKit",
-//            dependencies: [.target(name: "VentUIDebugKit", condition: .when(traits: ["DEBUG"]))],
-//            swiftSettings: [
-//                .define("DEBUG", .when(configuration: .debug)),
-//                .define("RELEASE", .when(configuration: .release))
-//            ]
-//        )
-//    ]
 )
 
 enum BuildConfig: String, Identifiable, CaseIterable, Hashable {
@@ -69,10 +56,11 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     static let PkgName: String = "VentUI"
     
-    case VentUI = "VentUI"
-    case VentUITests = "VentUITests"
-    case CardCellKit = "CardCellKit"
-    case VentUIDebugKit = "VentUIDebugKit"
+    case ventUI = "VentUI"
+    case ventUITests = "VentUITests"
+    case cardCellKit = "CardCellKit"
+    case cocoaAdapterKit = "CocoaAdapterKit"
+    case ventUIDebugKit = "VentUIDebugKit"
     
     
     
@@ -86,7 +74,7 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     var isTestTarget: Bool {
         switch self {
-        case .VentUITests:
+        case .ventUITests:
             true
         default:
             false
@@ -110,9 +98,17 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
         
     }
     
-    static func allTargets() -> [Target] {
+    static func allTargets(exept target: Pkg? = nil) -> [Target] {
+        
+        guard let target else {
+            let targets = Pkg.allCases
+                .map( { $0.target } )
+            
+            return targets
+        }
         
         let targets = Pkg.allCases
+            .filter( { $0 != target } )
             .map( { $0.target } )
         
         return targets
@@ -134,13 +130,26 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     
     var dependencies: [Target.Dependency] {
         switch self {
-        case .VentUI:
-            [.target(name: Pkg.CardCellKit(), condition: nil)]
-        case .VentUITests:
-            [.targetItem(name: Pkg.VentUI(), condition: nil)]
-        case .CardCellKit:
-            [.target(name: Pkg.VentUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))]
-        case .VentUIDebugKit:
+        case .ventUI:
+            [
+                .target(name: Pkg.cocoaAdapterKit(), condition: nil),
+                .target(name: Pkg.cardCellKit(), condition: nil),
+                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))
+            ]
+        case .ventUITests:
+            [
+                .targetItem(name: Pkg.ventUI(), condition: nil)
+            ]
+        case .cardCellKit:
+            [
+                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()])),
+                .target(name: Pkg.cocoaAdapterKit(), condition: .when(traits: [BuildConfig.debug()]))//tirar depois
+            ]
+        case .ventUIDebugKit:
+            [
+                .target(name: Pkg.cocoaAdapterKit(), condition: nil)
+            ]
+        case .cocoaAdapterKit:
             []
         }
     }
