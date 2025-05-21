@@ -10,6 +10,11 @@
 import SwiftUI
 
 public struct TestBuildSettings: View {
+    
+    init() {
+        
+    }
+    
     public var body: some View {
         Text("a")
             .onAppear {
