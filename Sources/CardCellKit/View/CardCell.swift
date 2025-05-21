@@ -71,6 +71,14 @@ class CardCell: UICollectionViewCell {
 }
 
 #Preview {
-    CardCell()
-        .representableView(size: .init(width: 150, height: 150))
+//    CardCell()
+//        .representableView(size: .init(width: 150, height: 150))
+    Text("a")
+        .onAppear {
+            #if DEBUG
+            print("debug")
+            #elseif RELEASE
+            print("release")
+            #endif
+        }
 }

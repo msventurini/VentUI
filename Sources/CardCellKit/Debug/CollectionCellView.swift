@@ -65,11 +65,11 @@ struct TesteEscaping<Content: View>: View {
 }
 
 struct DebugCollectionVCRepresentable: UIViewControllerRepresentable {
-//    @Environment(\.model)
+
     @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
     
     func makeUIViewController(context: Context) -> UIViewController {
-        let vc = SimpleListViewController(container: context.environment.modelContext.container)
+        let vc = CollectionView_SwiftData_DiffableDatasource_ViewController(container: context.environment.modelContext.container)
         
         return vc
     }
@@ -85,7 +85,7 @@ struct DebugCollectionVCRepresentable: UIViewControllerRepresentable {
     
 }
 
-class SimpleListViewController: UIViewController {
+class CollectionView_SwiftData_DiffableDatasource_ViewController: UIViewController {
     
     enum Section {
         case main
@@ -95,12 +95,10 @@ class SimpleListViewController: UIViewController {
     
     var collectionView: UICollectionView! = nil
     
-//    var debugModels: [DebugModel]
     var container: ModelContainer?
-
     
     init(container: ModelContainer) {
-        self.container = container//..debugModels = debugModels
+        self.container = container
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -114,17 +112,12 @@ class SimpleListViewController: UIViewController {
         configureCollectionView()
         configureDataSource()
     }
-}
-
-extension SimpleListViewController {
-    /// - Tag: List
+    
     private func createLayout() -> UICollectionViewLayout {
         let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         return UICollectionViewCompositionalLayout.list(using: config)
     }
-}
-
-extension SimpleListViewController {
+    
     func configureCollectionView() {
         self.collectionView = .init(frame: .zero, collectionViewLayout: createCollectionViewLayout())
         
@@ -157,6 +150,7 @@ extension SimpleListViewController {
         
         return layout
     }
+    
     private func configureDataSource() {
         
         let cellRegistration = UICollectionView.CellRegistration<CardCell, DebugModel> { (cell, indexPath, item) in
@@ -172,8 +166,6 @@ extension SimpleListViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         }
         
-        // initial data
-        
         let descriptor = FetchDescriptor<DebugModel>()
            let users = (try? container?.mainContext.fetch(descriptor)) ?? []
 
@@ -182,15 +174,10 @@ extension SimpleListViewController {
            snapshot.appendItems(users)
            dataSource?.apply(snapshot, animatingDifferences: false)
         
-        
-//        var snapshot = NSDiffableDataSourceSnapshot<Section, DebugModel.ID>()
-//        snapshot.appendSections([.main])
-//        snapshot.appendItems(debugModels.map( { $0.id }))
-//        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
-extension SimpleListViewController: UICollectionViewDelegate {
+extension CollectionView_SwiftData_DiffableDatasource_ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     }

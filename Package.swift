@@ -12,19 +12,6 @@ let package = Package(
     ],
     products: Pkg.allProducts(),
     targets: Pkg.allTargets()
-//    targets: [
-//        .target(name: Pkg.VentUI.name),
-//        .testTarget(name: "VentUITests",dependencies: ["VentUI"]),
-//        .target(name: "VentUIDebugKit"),
-//        .target(
-//            name: "CardCellKit",
-//            dependencies: [.target(name: "VentUIDebugKit", condition: .when(traits: ["DEBUG"]))],
-//            swiftSettings: [
-//                .define("DEBUG", .when(configuration: .debug)),
-//                .define("RELEASE", .when(configuration: .release))
-//            ]
-//        )
-//    ]
 )
 
 enum BuildConfig: String, Identifiable, CaseIterable, Hashable {
