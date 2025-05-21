@@ -11,13 +11,24 @@ import UIKit
 
 public enum DebugCat: String, Identifiable, CaseIterable, Hashable {
     
-    public var id: String {
-        return self.rawValue
+    public var id: Int {
+        return self.orderId
     }
     
     case charlotte = "Charlotte"
     case oliver = "Oliver"
     case robin = "Robin"
+    
+    var orderId: Int {
+        switch self {
+        case .charlotte:
+            1
+        case .oliver:
+            2
+        case .robin:
+            3
+        }
+    }
     
     public var uiImage: UIImage {
         switch self {

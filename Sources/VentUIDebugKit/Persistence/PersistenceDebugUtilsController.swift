@@ -11,12 +11,8 @@ import UIKit
 import SwiftData
 import CoreData
 
+
 public struct PersistenceDebugUtilsController {
-    
-    struct DebugTypeSafeString {
-        static let coreDataDebugContainerName = "ProgrammaticCoreDataDebugContainer"
-        static let coreDataDebugURLPath = "/dev/null"
-    }
     
     @MainActor
     static var previewModelContainer: ModelContainer {
@@ -32,7 +28,7 @@ public struct PersistenceDebugUtilsController {
     
     @MainActor
     static var previewCoreDataContainer: NSPersistentContainer = {
-        let managedObjectModel = CDDebugModelBuilder.createManagedObjectModel()
+        let managedObjectModel = CDDebugModelHelper.createManagedObjectModel()
         
         let container = NSPersistentContainer(
             name: DebugTypeSafeString.coreDataDebugContainerName,
@@ -58,7 +54,7 @@ public struct PersistenceDebugUtilsController {
                 item.title = debugCat.rawValue
                 item.isFavorite = debugCat.isFavoriteDefaultValue
             }
-   
+        
         do {
             try viewContext.save()
         } catch {
@@ -68,4 +64,9 @@ public struct PersistenceDebugUtilsController {
         
         return container
     }()
+}
+
+#Preview {
+    DebugCoreData()
+        .environment(\.managedObjectContext, PersistenceDebugUtilsController.previewCoreDataContainer.viewContext)
 }

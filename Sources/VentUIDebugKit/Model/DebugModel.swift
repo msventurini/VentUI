@@ -41,13 +41,18 @@ extension CDDebugModel {
     @NSManaged public var imageData: Data?
     @NSManaged public var title: String?
     @NSManaged public var isFavorite: Bool
+    
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<CDDebugModel> {
+        return NSFetchRequest<CDDebugModel>(entityName: DebugTypeSafeString.coreDataDebugEntity)
+    }
+    
 }
 
 extension CDDebugModel : Identifiable {
     
 }
 
-struct CDDebugModelBuilder {
+struct CDDebugModelHelper {
     static func createManagedObjectModel() -> NSManagedObjectModel {
         let managedObjectModel = NSManagedObjectModel()
         
@@ -73,4 +78,19 @@ struct CDDebugModelBuilder {
         
         return managedObjectModel
     }
+    
+    static func uiImageFromData(_ data: Data?) -> UIImage? {
+        guard let data else {
+            return nil
+        }
+        return UIImage(data: data)
+    }
+    
+    static func imageFromData(_ data: Data?) -> Image {
+        guard let image = uiImageFromData(data) else {
+            return Image(systemName: "xmark.circle")
+        }
+        return Image(uiImage: image)
+    }
+    
 }
