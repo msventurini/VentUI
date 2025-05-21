@@ -40,12 +40,9 @@ public extension CocoaViewRepresentable {
 
 #Preview {
     
-    VStack {
         UIView()
-            .representableView()
+            .representableView(size: .init(width: 300, height: 300))
 
-    }
-    
 }
 
 

@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 
+
 class CardCell: UICollectionViewCell {
     
     var title: String? {
@@ -28,11 +29,10 @@ class CardCell: UICollectionViewCell {
         }
     }
     
-    
     override init(frame: CGRect) {
         self.image = nil
         self.title = nil
-        super.init(frame: .zero)
+        super.init(frame: frame)
         self.layer.masksToBounds = true
     }
     
@@ -43,11 +43,19 @@ class CardCell: UICollectionViewCell {
         self.layer.masksToBounds = true
     }
     
+    init(contentConfiguration: CardCellContentConfiguration) {
+        self.image = contentConfiguration.image
+        self.title = contentConfiguration.title
+        super.init(frame: .zero)
+        self.layer.masksToBounds = true
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
+        super.updateConfiguration(using: state)
         backgroundConfiguration = CardCellBackgroundConfiguration.configuration(for: state)
         
         var content = CardCellContentConfiguration().updated(for: state)
@@ -56,8 +64,13 @@ class CardCell: UICollectionViewCell {
         content.title = title
         contentConfiguration = content
     }
+    
+    func defaultContentConfiguration() -> CardCellContentConfiguration {
+        return CardCellContentConfiguration()
+    }
 }
 
-//#Preview {
-//    DebugView(debugModel: nil)
-//}
+#Preview {
+    CardCell()
+        .representableView(size: .init(width: 150, height: 150))
+}

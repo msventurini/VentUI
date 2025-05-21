@@ -27,9 +27,9 @@ struct DebugView: View {
             VStack {
                 
                 ForEach(debugModels) { modelItem in
-
-                    label
-                        .representableView()
+                    
+                    Text("a")
+                    
                     
                 }
             }
@@ -59,5 +59,143 @@ struct TesteEscaping<Content: View>: View {
 
 
 #Preview(traits: .modifier(PreviewDebugHelper())) {
-    DebugView()
+    //    DebugView()
+//    SimpleListViewController()
+    DebugCollectionVCRepresentable()
+}
+
+struct DebugCollectionVCRepresentable: UIViewControllerRepresentable {
+//    @Environment(\.model)
+    @Query(sort: \DebugModel.title) var debugModels: [DebugModel]
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        let vc = SimpleListViewController(container: context.environment.modelContext.container)
+        
+        return vc
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        
+    }
+    
+    
+    typealias UIViewControllerType = UIViewController
+    
+    
+    
+}
+
+class SimpleListViewController: UIViewController {
+    
+    enum Section {
+        case main
+    }
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, DebugModel>! = nil
+    
+    var collectionView: UICollectionView! = nil
+    
+//    var debugModels: [DebugModel]
+    var container: ModelContainer?
+
+    
+    init(container: ModelContainer) {
+        self.container = container//..debugModels = debugModels
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.title = "List"
+        configureCollectionView()
+        configureDataSource()
+    }
+}
+
+extension SimpleListViewController {
+    /// - Tag: List
+    private func createLayout() -> UICollectionViewLayout {
+        let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        return UICollectionViewCompositionalLayout.list(using: config)
+    }
+}
+
+extension SimpleListViewController {
+    func configureCollectionView() {
+        self.collectionView = .init(frame: .zero, collectionViewLayout: createCollectionViewLayout())
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        collectionView.delegate = self
+        //        collectionView.collectionViewLayout =
+    }
+    
+    func createCollectionViewLayout() -> UICollectionViewLayout {
+        let recipeItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let recipeItem = NSCollectionLayoutItem(layoutSize: recipeItemSize)
+        recipeItem.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 10.0, bottom: 5.0, trailing: 10.0)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.50), heightDimension: .fractionalWidth(0.375))
+        
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: recipeItem, count: 2)
+        
+        
+        let section = NSCollectionLayoutSection(group: group)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        return layout
+    }
+    private func configureDataSource() {
+        
+        let cellRegistration = UICollectionView.CellRegistration<CardCell, DebugModel> { (cell, indexPath, item) in
+            
+            cell.title = item.title
+            cell.image = item.image
+            
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, DebugModel>(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: DebugModel) -> CardCell? in
+            
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+        }
+        
+        // initial data
+        
+        let descriptor = FetchDescriptor<DebugModel>()
+           let users = (try? container?.mainContext.fetch(descriptor)) ?? []
+
+           var snapshot = NSDiffableDataSourceSnapshot<Section, DebugModel>()
+           snapshot.appendSections([.main])
+           snapshot.appendItems(users)
+           dataSource?.apply(snapshot, animatingDifferences: false)
+        
+        
+//        var snapshot = NSDiffableDataSourceSnapshot<Section, DebugModel.ID>()
+//        snapshot.appendSections([.main])
+//        snapshot.appendItems(debugModels.map( { $0.id }))
+//        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+extension SimpleListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+extension DebugModel : @unchecked Sendable {
+    
 }
