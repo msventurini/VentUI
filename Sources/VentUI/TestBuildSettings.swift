@@ -5,7 +5,7 @@
 //  Created by Matheus Silveira Venturini on 21/05/25.
 //
 
-#if RELEASE
+//#if RELEASE
 
 import SwiftUI
 
@@ -25,4 +25,4 @@ public struct TestBuildSettings: View {
 #Preview {
     TestBuildSettings()
 }
-#endif
+//#endif
