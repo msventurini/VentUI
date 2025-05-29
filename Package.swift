@@ -8,7 +8,8 @@ let package = Package(
     name: Pkg.PkgName,
     platforms: [
         .iOS(.v18),
-        .macCatalyst(.v18)
+        .macCatalyst(.v18),
+        .macOS(.v15)
     ],
     products: Pkg.allProducts(),
     targets: Pkg.allTargets()
