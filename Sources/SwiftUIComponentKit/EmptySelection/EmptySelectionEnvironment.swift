@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     @Entry var emptySelectionEnvironment: EmptySelectionModel = .init(
         labelText: "Nothing Here",
         systemImage: "exclamationmark.square",

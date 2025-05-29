@@ -8,18 +8,18 @@
 import SwiftUI
 
 
-struct EmptySelectionView<Content>: View where Content: View {
+public struct EmptySelectionView<Content>: View where Content: View {
     
     @Environment(\.emptySelectionEnvironment) private var emptySelectionContents
         
     let action: () -> Content
 
     
-    init(@ViewBuilder action: @escaping () -> Content = { EmptyView() }) {
+    public init(@ViewBuilder action: @escaping () -> Content = { EmptyView() }) {
         self.action = action
     }
     
-    var body: some View {
+    public var body: some View {
         ContentUnavailableView {
             Label(
                 emptySelectionContents.labelText,

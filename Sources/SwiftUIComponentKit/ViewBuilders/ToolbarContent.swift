@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToolbarInlinePicker<ItemType, Content>: ToolbarContent where ItemType: Hashable & Identifiable, Content: View {
+public struct ToolbarInlinePicker<ItemType, Content>: ToolbarContent where ItemType: Hashable & Identifiable, Content: View {
     
     @Binding var selected: ItemType?
     var collection: [ItemType]
@@ -15,7 +15,7 @@ struct ToolbarInlinePicker<ItemType, Content>: ToolbarContent where ItemType: Ha
     
     private var showNilAsOption: Bool = true
     
-    init(selected: Binding<ItemType?>, collection: [ItemType], content: @escaping (ItemType) -> Content) {
+    public init(selected: Binding<ItemType?>, collection: [ItemType], content: @escaping (ItemType) -> Content) {
         self._selected = selected
         self.collection = collection
         self.content = content
@@ -27,7 +27,7 @@ struct ToolbarInlinePicker<ItemType, Content>: ToolbarContent where ItemType: Ha
     let barPlacement: ToolbarItemPlacement = .bottomBar
 
 #endif
-    var body: some ToolbarContent {
+    public var body: some ToolbarContent {
         ToolbarItemGroup(placement: barPlacement) {
             
                 Picker("", selection: $selected) {

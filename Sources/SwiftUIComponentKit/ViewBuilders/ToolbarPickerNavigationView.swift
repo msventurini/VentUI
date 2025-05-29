@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToolbarPickerNavigationView<Content, BottomToolbar, ItemType>: View where Content: View, BottomToolbar: ToolbarContent, ItemType: Hashable & Identifiable {
+public struct ToolbarPickerNavigationView<Content, BottomToolbar, ItemType>: View where Content: View, BottomToolbar: ToolbarContent, ItemType: Hashable & Identifiable {
     
     @Binding var selected: ItemType?
     var collection: [ItemType]
@@ -22,7 +22,7 @@ struct ToolbarPickerNavigationView<Content, BottomToolbar, ItemType>: View where
         }
     }
     
-    init(
+    public init(
         collection: [ItemType],
         selected: Binding<ItemType?>,
         @ViewBuilder content: @escaping (ItemType) -> Content,
@@ -34,7 +34,7 @@ struct ToolbarPickerNavigationView<Content, BottomToolbar, ItemType>: View where
         self.bottomToolbar = bottomToolbar
     }
     
-    var body: some View {
+    public var body: some View {
         
         NavigationStack {
             VStack {

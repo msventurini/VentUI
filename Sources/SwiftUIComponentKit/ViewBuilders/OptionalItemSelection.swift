@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct OptionalItemSelection<Content, EmptyContent, ItemType>: View where Content: View, EmptyContent: View, ItemType: Hashable & Identifiable {
+public struct OptionalItemSelection<Content, EmptyContent, ItemType>: View where Content: View, EmptyContent: View, ItemType: Hashable & Identifiable {
 
-    var selected: ItemType?
-    var content: (ItemType) -> Content?
-    var emptySelectionContent: EmptyContent
+    public var selected: ItemType?
+    public var content: (ItemType) -> Content?
+    public var emptySelectionContent: EmptyContent
     
     
     @ViewBuilder var conditionalContent: some View {
@@ -22,13 +22,13 @@ struct OptionalItemSelection<Content, EmptyContent, ItemType>: View where Conten
         }
     }
     
-    init(_ selected: ItemType?, @ViewBuilder content: @escaping (ItemType) -> Content, @ViewBuilder onEmptySelection emptySelectionContent: () -> EmptyContent = { EmptySelectionView() }) {
+    public init(_ selected: ItemType?, @ViewBuilder content: @escaping (ItemType) -> Content, @ViewBuilder onEmptySelection emptySelectionContent: () -> EmptyContent = { EmptySelectionView() }) {
         self.selected = selected
         self.content = content
         self.emptySelectionContent = emptySelectionContent()
     }
 
-    var body: some View {
+    public var body: some View {
         conditionalContent
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

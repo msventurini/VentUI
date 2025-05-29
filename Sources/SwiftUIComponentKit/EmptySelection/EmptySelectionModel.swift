@@ -7,10 +7,16 @@
 
 import Foundation
 
-struct EmptySelectionModel {
+public struct EmptySelectionModel {
     
-    let labelText: String
-    let systemImage: String
-    let description: String
+    public let labelText: String
+    public let systemImage: String
+    public let description: String
+    
+    public init(labelText: String, systemImage: String, description: String) {
+        self.labelText = labelText
+        self.systemImage = systemImage
+        self.description = description
+    }
     
 }
