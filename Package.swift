@@ -61,6 +61,9 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     case cardCellKit = "CardCellKit"
     case cocoaAdapterKit = "CocoaAdapterKit"
     case ventUIDebugKit = "VentUIDebugKit"
+    case releaseOnlyPkg = "ReleaseOnlyPkg"
+    case swiftUIComponentKit = "SwiftUIComponentKit"
+    case debugOnlyPkg = "DebugOnlyPkg"
     
     
     
@@ -86,7 +89,7 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
     }
     
     var product: Product {
-        return Product.library(name: self.name, targets: [self.rawValue])
+        return Product.library(name: self.name, type: .dynamic,targets: [self.rawValue])
     }
     
     static func allProducts() -> [Product] {
@@ -118,7 +121,7 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
         switch isTestTarget {
         case true:
             return .testTarget(name: self.name, dependencies: self.dependencies, swiftSettings: self.swiftSettings)
-
+            
         case false:
             return .target(name: self.name, dependencies: self.dependencies, swiftSettings: self.swiftSettings)
         }
@@ -134,7 +137,10 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
             [
                 .target(name: Pkg.cocoaAdapterKit(), condition: nil),
                 .target(name: Pkg.cardCellKit(), condition: nil),
-                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()]))
+                .target(name: Pkg.ventUIDebugKit(), condition: .when(traits: [BuildConfig.debug()])),
+                .target(name: Pkg.debugOnlyPkg(), condition: .when(traits: [BuildConfig.debug()])),
+                .target(name: Pkg.releaseOnlyPkg(), condition: .when(traits: [BuildConfig.release()])),
+                .target(name: Pkg.swiftUIComponentKit(), condition: nil)
             ]
         case .ventUITests:
             [
@@ -151,8 +157,12 @@ enum Pkg: String, Identifiable, CaseIterable, Hashable {
             ]
         case .cocoaAdapterKit:
             []
+        case .swiftUIComponentKit:
+            []
+        case .releaseOnlyPkg:
+            []
+        case .debugOnlyPkg:
+            []
         }
     }
 }
-
-

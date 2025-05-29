@@ -60,7 +60,7 @@ struct TesteEscaping<Content: View>: View {
 
 #Preview(traits: .modifier(PreviewDebugHelper())) {
     //    DebugView()
-//    SimpleListViewController()
+//    SimpleListViewController(asdasdasd)
     DebugCollectionVCRepresentable()
 }
 
