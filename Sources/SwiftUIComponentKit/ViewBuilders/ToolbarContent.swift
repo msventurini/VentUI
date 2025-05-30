@@ -13,7 +13,7 @@ public struct ToolbarInlinePicker<ItemType, Content>: ToolbarContent where ItemT
     var collection: [ItemType]
     @ViewBuilder let content: (ItemType) -> Content
     
-    private var showNilAsOption: Bool = true
+    private var showNilAsOption: Bool = false
     
     public init(selected: Binding<ItemType?>, collection: [ItemType], content: @escaping (ItemType) -> Content) {
         self._selected = selected
